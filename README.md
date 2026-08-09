@@ -33,7 +33,6 @@ held-out metrics — not just asserted to work.
   can visually confirm genre clusters actually separate.
 - 🎨 Dark "reading lamp" themed UI (ink navy + brass gold + burgundy).
 
----
 
 ## How it works (the short version)
 
@@ -112,12 +111,13 @@ Test RMSE (rating prediction): 0.27
 Precision@10: 0.58  (random baseline: 0.13)
 ```
 
-### 6. Launch the app
+### 6. Launch the app locally
 ```bash
 streamlit run app.py
 ```
 Opens the dark-themed "Inkwell" frontend in your browser at
 `http://localhost:8501`.
+
 
 ---
 
@@ -125,16 +125,26 @@ Opens the dark-themed "Inkwell" frontend in your browser at
 
 ```
 book_recommender/
-├── download_data.py     # Pulls dataset from Kaggle via kagglehub
-├── preprocess.py         # Cleans data, builds TF-IDF/SVD + numeric features
-├── model.py               # Hybrid feedforward network (reconstruction + rating heads)
-├── train.py                # Trains, evaluates (MAE/RMSE/Precision@K), saves everything
-├── recommend.py         # Similarity search, profile blending, explainability
-├── app.py                    # Streamlit dark-theme frontend (3 tabs: Recommend/Browse/Insights)
+├── download_data.py         # Pulls dataset from Kaggle via kagglehub  (local-only step)
+├── preprocess.py             # Cleans data, builds TF-IDF/SVD + numeric features (local-only)
+├── model.py                   # Hybrid feedforward network (reconstruction + rating heads)
+├── train.py                    # Trains, evaluates (MAE/RMSE/Precision@K)  (local-only step)
+├── recommend.py             # Similarity search, profile blending, explainability
+├── app.py                        # Streamlit dark-theme frontend — THIS is the deploy entry point
 ├── requirements.txt
-├── .streamlit/config.toml  # Native Streamlit dark theme
-├── data/                    # Downloaded CSV lands here
-└── artifacts/               # Trained model, embeddings, metrics.json (generated)
+├── .gitignore
+├── .streamlit/config.toml      # Native Streamlit dark theme
+├── data/                        # Downloaded CSV (gitignored — regenerate via download_data.py)
+└── artifacts/
+    ├── books_clean.pkl          # ✅ committed — read by app.py
+    ├── embeddings.npy           # ✅ committed — read by app.py
+    ├── metrics.json             # ✅ committed — read by app.py
+    ├── hybrid_model.keras       # ❌ gitignored — training artifact only
+    ├── encoder.keras            # ❌ gitignored — training artifact only
+    ├── features.npy             # ❌ gitignored — training artifact only
+    ├── tfidf.joblib             # ❌ gitignored — training artifact only
+    ├── svd.joblib                # ❌ gitignored — training artifact only
+    └── scaler.joblib             # ❌ gitignored — training artifact only
 ```
 
 ## App tabs
